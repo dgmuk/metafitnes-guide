@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Гайд по построению тренировочного процесса | Дмитрий Мухин</title>
+  <meta name="description" content="Полный разбор системы построения тренировочного процесса на год вперёд.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main:        #0d0d0d;
+      --bg-card:        #141414;
+      --bg-elevated:    #1a1a1a;
+      --bg-section:     #111111;
+      --accent:         #c8f542;
+      --accent-dim:     rgba(200, 245, 66, 0.10);
+      --accent-glow:    rgba(200, 245, 66, 0.04);
+      --text-primary:   #f0f0ee;
+      --text-secondary: #8a8a82;
+      --text-muted:     #444440;
+      --border:         rgba(255,255,255,0.07);
+      --border-accent:  rgba(200, 245, 66, 0.20);
+      --border-strong:  rgba(255,255,255,0.12);
+      --font-display:   'Unbounded', sans-serif;
+      --font-body:      'Golos Text', sans-serif;
+      --radius:         12px;
+      --radius-lg:      20px;
+      --radius-xl:      28px;
+      --max-width:      720px;
+      --max-width-wide: 960px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    h1, h2, h3, h4 { font-family: var(--font-display); }
+
+    section { padding: 80px 20px; }
+    .container { max-width: var(--max-width); margin: 0 auto; }
+    .container-wide { max-width: var(--max-width-wide); margin: 0 auto; }
+
+    /* Navbar */
+    #navbar { position: sticky; top: 0; z-index: 100; transition: background 0.3s, backdrop-filter 0.3s; padding: 16px 20px; background: transparent; }
+    #navbar.scrolled { background: rgba(13,13,13,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: var(--max-width-wide); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-mark { width: 40px; height: 40px; background: var(--accent); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #0d0d0d; font-family: var(--font-display); font-weight: 700; font-size: 16px; }
+    .logo-text { display: flex; flex-direction: column; }
+    .logo-name { font-weight: 600; font-size: 15px; }
+    .logo-tagline { font-size: 12px; color: var(--text-secondary); }
+    .btn-nav { border: 1px solid var(--border-accent); color: var(--accent); background: var(--accent-dim); border-radius: 100px; padding: 8px 18px; font-size: 13px; font-weight: 500; transition: 0.2s; }
+    .btn-nav:hover { background: var(--accent); color: #0d0d0d; }
+
+    /* Hero */
+    .hero { 
+      min-height: 100vh; display: flex; align-items: center; text-align: center; position: relative;
+      background-image: linear-gradient(rgba(200,245,66,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,245,66,0.03) 1px, transparent 1px);
+      background-size: 40px 40px; background-position: center center; padding-top: 40px; padding-bottom: 100px;
+      margin-top: -74px; /* offset navbar */
+    }
+    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 200px; background: linear-gradient(transparent, var(--bg-main)); pointer-events: none; }
+    .hero-content { position: relative; z-index: 10; max-width: var(--max-width); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+    .hero-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+    .hero h1 { font-size: clamp(28px, 6vw, 52px); letter-spacing: -0.02em; color: var(--text-primary); font-weight: 900; line-height: 1.1; }
+    .hero-subtitle { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+    .hero-facts { display: flex; gap: 24px; font-size: 14px; color: var(--text-secondary); justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+    .btn-primary { background: var(--accent); color: #0d0d0d; font-weight: 700; padding: 16px 36px; border-radius: 100px; display: inline-block; transition: 0.2s; font-size: 16px; border: none; cursor: pointer; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    /* Common */
+    .section-title { font-size: clamp(24px, 4vw, 36px); font-weight: 700; margin-bottom: 16px; text-align: center; }
+    .section-subtitle { font-size: 16px; color: var(--text-secondary); text-align: center; max-width: 600px; margin: 0 auto 48px; }
+    .text-center { text-align: center; }
+    .mt-48 { margin-top: 48px; }
+    .mb-48 { margin-bottom: 48px; }
+    .bg-section { background: var(--bg-section); }
+    .text-body { color: var(--text-secondary); font-size: 16px; line-height: 1.6; text-align: center; max-width: var(--max-width); margin: 0 auto; }
+
+    /* Cards */
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+    .card { border: 1px solid var(--border); background: var(--bg-card); border-radius: var(--radius); padding: 24px; transition: border-color 0.3s; }
+    .card:hover { border-color: var(--border-accent); }
+    .card-icon { font-size: 32px; margin-bottom: 16px; display: inline-block; }
+    .card-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; font-family: var(--font-body); }
+    .card-text { color: var(--text-secondary); font-size: 15px; }
+
+    /* Accordion */
+    .goal-card { border: 1px solid var(--border); background: var(--bg-card); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; cursor: pointer; transition: 0.3s; }
+    .goal-card:hover { border-color: var(--border-strong); }
+    .goal-header { padding: 20px; display: flex; align-items: center; justify-content: space-between; font-weight: 600; }
+    .goal-title-wrap { display: flex; align-items: center; gap: 12px; }
+    .goal-arrow { transition: transform 0.3s; color: var(--text-secondary); }
+    .goal-card.active .goal-arrow { transform: rotate(180deg); color: var(--accent); }
+    .goal-card.active { border-color: var(--border-accent); }
+    .goal-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; padding: 0 20px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
+    .goal-card.active .goal-body { max-height: 200px; padding-bottom: 20px; }
+
+    /* Forms & Interactive */
+    .calc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+    .radio-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .radio-question { font-weight: 600; margin-bottom: 12px; font-size: 16px; }
+    .radio-option { display: block; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: border-color 0.2s, background 0.2s; font-size: 15px; }
+    .radio-option:hover { border-color: var(--border-strong); background: var(--bg-elevated); }
+    .radio-option.selected { border-color: var(--accent); background: var(--accent-dim); color: var(--text-primary); }
+
+    .result-block { display: none; border-left: 3px solid var(--accent); padding: 20px 24px; background: var(--bg-elevated); border-radius: 0 var(--radius) var(--radius) 0; margin-top: 24px; }
+    .result-title { font-weight: 700; color: var(--accent); margin-bottom: 8px; font-size: 16px; }
+    .result-text { color: var(--text-primary); font-size: 15px; line-height: 1.6; }
+
+    /* Timeline */
+    .year-timeline { display: flex; gap: 4px; height: 12px; border-radius: 6px; overflow: hidden; margin: 32px 0 12px; }
+    .year-segment { flex: 1; background: var(--bg-elevated); border: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+    .year-segment:hover { background: var(--border-strong); }
+    .year-segment.active { background: var(--accent); }
+    .year-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); text-align: center; }
+    .year-labels div { flex: 1; padding: 0 4px; }
+    .timeline-desc { display: none; margin-top: 24px; padding: 20px; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); color: var(--text-secondary); font-size: 15px; }
+    .timeline-desc.active { display: block; }
+
+    /* Meso chart */
+    .meso-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 140px; margin: 48px 0 48px; border-bottom: 1px solid var(--border); padding-bottom: 1px; }
+    .meso-bar-container { display: flex; flex-direction: column; align-items: center; width: 18%; position: relative; }
+    .meso-bar { width: 100%; background: var(--bg-elevated); border: 1px solid var(--border-accent); border-radius: 6px 6px 0 0; }
+    .meso-bar.deload { background: var(--accent-dim); border-color: var(--accent); }
+    .meso-label-bot { position: absolute; bottom: -28px; font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+    .meso-zone-top { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .meso-zone-top.deload { color: var(--accent); }
+
+    /* Table */
+    .styled-table { width: 100%; border-collapse: collapse; margin-top: 32px; font-size: 14px; }
+    .styled-table th, .styled-table td { padding: 12px 16px; text-align: left; }
+    .styled-table thead { background: var(--bg-elevated); }
+    .styled-table th { font-weight: 600; color: var(--text-primary); border-bottom: 1px solid var(--border); }
+    .styled-table td { border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+    .styled-table tr:last-child td { border-bottom: none; }
+    .styled-table .row-deload td { color: var(--accent); }
+
+    /* Calc Fields */
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 15px; }
+    .calc-select { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-primary); padding: 12px 16px; border-radius: var(--radius); width: 100%; font-family: var(--font-body); font-size: 15px; appearance: none; outline: none; }
+    .calc-select:focus { border-color: var(--accent); }
+    .checkbox-wrapper { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
+    .checkbox-wrapper input { display: none; }
+    .toggle-bg { width: 44px; height: 24px; background: var(--bg-elevated); border-radius: 12px; position: relative; border: 1px solid var(--border); transition: 0.3s; }
+    .toggle-knob { width: 18px; height: 18px; background: var(--text-secondary); border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+    .checkbox-wrapper input:checked + .toggle-bg { background: var(--accent-dim); border-color: var(--accent); }
+    .checkbox-wrapper input:checked + .toggle-bg .toggle-knob { background: var(--accent); transform: translateX(20px); }
+
+    .warning-box { padding: 16px; background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.2); border-radius: var(--radius); font-size: 14px; color: #ffaa00; margin-top: 24px; text-align: left; }
+
+    /* Cycle Timeline */
+    .cycle-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .cycle-phase { padding: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+    .cycle-phase-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .cycle-phase-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* Small Cards */
+    .small-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .small-card { padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; font-weight: 500; background: var(--bg-elevated); text-align: center; color: var(--text-primary); }
+
+    /* Author */
+    .author-card { display: flex; gap: 32px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 40px; }
+    .author-avatar { width: 80px; height: 80px; background: var(--accent); border-radius: var(--radius); display: flex; justify-content: center; align-items: center; color: #0d0d0d; font-family: var(--font-display); font-weight: 700; font-size: 28px; flex-shrink: 0; }
+    .author-info { flex: 1; text-align: left; }
+    .author-name { font-size: 24px; font-family: var(--font-display); font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
+    .author-role { font-size: 14px; color: var(--accent); margin-bottom: 16px; font-weight: 500; }
+    .author-info p { margin-bottom: 16px; color: var(--text-secondary); font-size: 15px; }
+    .author-link { color: var(--accent); font-weight: 500; display: inline-block; margin-top: 8px; transition: opacity 0.2s; }
+    .author-link:hover { opacity: 0.8; }
+    .author-stats { display: flex; gap: 48px; margin-top: 48px; justify-content: center; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .stat-label { font-size: 13px; color: var(--text-secondary); }
+
+    /* Final CTA */
+    .cta-final { background: radial-gradient(ellipse at 50% 100%, rgba(200,245,66,0.08) 0%, transparent 70%), var(--bg-main); border-top: 1px solid var(--border-accent); text-align: center; padding: 100px 20px; }
+    .cta-label { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 16px; }
+    .cta-final h2 { font-size: clamp(28px, 5vw, 42px); line-height: 1.2; margin-bottom: 24px; }
+    .cta-buttons { display: flex; justify-content: center; gap: 16px; margin: 40px 0 24px; }
+    .btn-outline { border: 1px solid var(--border-accent); color: var(--accent); padding: 16px 36px; border-radius: 100px; background: var(--accent-dim); font-weight: 600; transition: 0.2s; display: inline-block; font-size: 16px; }
+    .btn-outline:hover { background: var(--border-accent); }
+    .cta-subtext { color: var(--text-secondary); font-size: 14px; max-width: 500px; margin: 0 auto 16px; }
+    .cta-link { color: var(--text-primary); font-size: 15px; font-weight: 500; text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s; }
+    .cta-link:hover { color: var(--accent); }
+
+    /* Footer */
+    footer { padding: 40px 20px; border-top: 1px solid var(--border); background: var(--bg-main); text-align: center; }
+    .footer-inner { max-width: var(--max-width-wide); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 14px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* Animations */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in:nth-child(2) { transition-delay: 0.1s; }
+    .fade-in:nth-child(3) { transition-delay: 0.2s; }
+    .fade-in:nth-child(4) { transition-delay: 0.3s; }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .cycle-timeline { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+      .hero-facts { flex-direction: column; gap: 12px; align-items: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .cta-buttons a { width: 100%; box-sizing: border-box; }
+      section { padding: 48px 20px; }
+      .logo-tagline { display: none; }
+      .author-card { flex-direction: column; align-items: center; text-align: center; padding: 24px; }
+      .author-info { text-align: center; }
+      .author-stats { flex-direction: column; gap: 24px; margin-top: 32px; }
+      .small-cards-grid { grid-template-columns: 1fr; }
+      .year-labels { font-size: 10px; flex-direction: column; gap: 8px; }
+      .year-timeline { flex-direction: column; height: auto; gap: 8px; border-radius: 0; margin-top: 16px; }
+      .year-segment { padding: 12px; text-align: center; border-radius: var(--radius); }
+      .footer-inner { flex-direction: column; gap: 16px; }
+      .styled-table { font-size: 12px; }
+      .styled-table th, .styled-table td { padding: 10px 8px; }
+      .meso-chart { margin-bottom: 60px; }
+      .meso-label-bot { font-size: 10px; bottom: -35px; white-space: normal; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- БЛОК 1: НАВИГАЦИЯ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">
+        <div class="logo-mark">ДМ</div>
+        <div class="logo-text">
+          <span class="logo-name">Дмитрий Мухин</span>
+          <span class="logo-tagline">Тренер · 8 лет опыта</span>
+        </div>
+      </a>
+      <a href="https://t.me/dgmukhin_adm" class="btn-nav" target="_blank">Написать →</a>
+    </div>
+  </nav>
+
+  <!-- БЛОК 2: HERO -->
+  <section class="hero">
+    <div class="hero-content fade-in">
+      <div class="hero-label">НАУЧНЫЙ ПОДХОД К ТРЕНИРОВКАМ</div>
+      <h1>Почему ты тренируешься<br>и не получаешь результат</h1>
+      <p class="hero-subtitle">Полный разбор системы построения тренировочного процесса на год вперёд. Как думает опытный тренер когда составляет программу, и почему случайный набор упражнений никогда не даст того что ты хочешь.</p>
+      <div class="hero-facts">
+        <span>⏱ 15 минут чтения</span>
+        <span>🧬 Научная база 2024</span>
+        <span>💡 Всё по делу</span>
+      </div>
+      <a href="#problem" class="btn-primary mt-24">Начать читать ↓</a>
+    </div>
+  </section>
+
+  <!-- БЛОК 3: ПРОБЛЕМА -->
+  <section id="problem" class="bg-section">
+    <div class="container fade-in">
+      <h2 class="section-title">Знакомая картина?</h2>
+      <div class="cards-grid">
+        <div class="card fade-in">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">Меняешь программы каждые два месяца</div>
+          <div class="card-text">Берёшь новую программу потому что старая перестала работать. Меняешь упражнения, добавляешь подходы. Топчешься на месте.</div>
+        </div>
+        <div class="card fade-in">
+          <div class="card-icon">📉</div>
+          <div class="card-title">Делаешь всё правильно, но прогресса нет</div>
+          <div class="card-text">Ходишь в зал регулярно, не пропускаешь, стараешься. И всё равно смотришь на те же результаты что год назад.</div>
+        </div>
+        <div class="card fade-in">
+          <div class="card-icon">🤷</div>
+          <div class="card-title">Непонятно сколько и как тренироваться</div>
+          <div class="card-text">Один говорит делать 5 подходов. Другой 20. Кто-то советует каждый день. Непонятно кому верить.</div>
+        </div>
+      </div>
+      <p class="text-body fade-in">Проблема не в том что ты ленишься или делаешь что-то принципиально неправильно. Проблема в том, что у тебя нет системы. А без системы даже правильные действия дают случайный результат. Дальше я объясню как эта система устроена.</p>
+    </div>
+  </section>
+
+  <!-- БЛОК 4: ШАГ 0 -->
+  <section>
+    <div class="container fade-in">
+      <h2 class="section-title">Шаг 0. Без этого ничего не работает</h2>
+      <p class="section-subtitle">Прежде чем говорить о подходах, повторениях и программах, нужно ответить на один вопрос. Чего именно ты хочешь? От ответа зависит буквально всё: как строится программа, сколько нужно тренироваться, как считается нагрузка и что считать прогрессом.</p>
+      
+      <div class="accordion-container">
+        <div class="goal-card fade-in" onclick="toggleGoal(this)">
+          <div class="goal-header">
+            <div class="goal-title-wrap"><span class="card-icon" style="margin:0; font-size: 24px;">💪</span> НАБОР МЫШЕЧНОЙ МАССЫ</div>
+            <div class="goal-arrow">▼</div>
+          </div>
+          <div class="goal-body">Прогрессивная перегрузка, умеренный профицит калорий, объём тренировок в зоне MAV, правильная периодизация нагрузки. Программа строится на 3–6 месяцев с чёткими этапами накопления и восстановления.</div>
+        </div>
+        
+        <div class="goal-card fade-in" onclick="toggleGoal(this)">
+          <div class="goal-header">
+            <div class="goal-title-wrap"><span class="card-icon" style="margin:0; font-size: 24px;">🔥</span> СНИЖЕНИЕ ЖИРА</div>
+            <div class="goal-arrow">▼</div>
+          </div>
+          <div class="goal-body">Дефицит калорий 300–500 ккал, высокий белок (2.2–2.5 г/кг), силовые тренировки как приоритет над кардио. Объём чуть ниже обычного, но интенсивность сохраняется. Плюс рефиды каждые 10 дней.</div>
+        </div>
+
+        <div class="goal-card fade-in" onclick="toggleGoal(this)">
+          <div class="goal-header">
+            <div class="goal-title-wrap"><span class="card-icon" style="margin:0; font-size: 24px;">🏋️</span> РАЗВИТИЕ СИЛЫ</div>
+            <div class="goal-arrow">▼</div>
+          </div>
+          <div class="goal-body">Блоковая периодизация, работа в диапазоне 85–100% от максимума, меньший объём и больший отдых между подходами. Нейромышечная адаптация идёт иначе чем при наборе массы.</div>
+        </div>
+
+        <div class="goal-card fade-in" onclick="toggleGoal(this)">
+          <div class="goal-header">
+            <div class="goal-title-wrap"><span class="card-icon" style="margin:0; font-size: 24px;">⚡</span> ОБЩАЯ ФОРМА И ЗДОРОВЬЕ</div>
+            <div class="goal-arrow">▼</div>
+          </div>
+          <div class="goal-body">Сбалансированный подход, фулбади 3 раза в неделю, умеренный объём, больше внимания к технике и восстановлению. Цель не рекорды, а стабильный долгосрочный прогресс.</div>
+        </div>
+      </div>
+      
+      <p class="text-body mt-32 fade-in">Один и тот же человек с разными целями получает принципиально разные программы. Это не маркетинг, это физиология.</p>
+    </div>
+  </section>
+
+  <!-- БЛОК 5: ИНТЕРАКТИВ 1 -->
+  <section class="bg-section">
+    <div class="container fade-in">
+      <h2 class="section-title">Определи свой уровень за 2 минуты</h2>
+      <p class="section-subtitle">От уровня зависит стартовый объём тренировок и скорость прогрессии.</p>
+      
+      <div class="calc-card">
+        <div class="radio-group">
+          <div class="radio-question">Как давно тренируешься регулярно?</div>
+          <div class="radio-option" data-group="l1" data-points="0">Менее 1 года</div>
+          <div class="radio-option" data-group="l1" data-points="2">1–3 года</div>
+          <div class="radio-option" data-group="l1" data-points="4">Более 3 лет</div>
+        </div>
+        
+        <div class="radio-group">
+          <div class="radio-question">Присед со штангой — сколько делаешь?</div>
+          <div class="radio-option" data-group="l2" data-points="0">Не делаю / вес тела</div>
+          <div class="radio-option" data-group="l2" data-points="1">До 1 своего веса</div>
+          <div class="radio-option" data-group="l2" data-points="2">1–1.5 своего веса</div>
+          <div class="radio-option" data-group="l2" data-points="3">Более 1.5 своего веса</div>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-question">Как давно не было заметного прогресса?</div>
+          <div class="radio-option" data-group="l3" data-points="0">Прогресс есть, растут веса</div>
+          <div class="radio-option" data-group="l3" data-points="2">Несколько месяцев</div>
+          <div class="radio-option" data-group="l3" data-points="3">Больше полугода</div>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-question">Сколько дней в неделю тренируешься?</div>
+          <div class="radio-option" data-group="l4" data-points="0">1–2 дня</div>
+          <div class="radio-option" data-group="l4" data-points="1">3–4 дня</div>
+          <div class="radio-option" data-group="l4" data-points="2">5+ дней</div>
+        </div>
+        
+        <div class="text-center mt-32">
+          <button class="btn-primary" onclick="calcLevel()">Узнать результат</button>
+        </div>
+
+        <div id="level-results">
+          <div class="result-block level-result" id="level-beginner">
+            <div class="result-title">НОВИЧОК</div>
+            <div class="result-text">Тебе доступен самый приятный период в тренировках: любой адекватный стимул вызывает рост. Стартовый объём для тебя — 8–12 рабочих подходов на мышечную группу в неделю. Программа простая, линейная прогрессия. Твой приоритет прямо сейчас — освоить технику базовых упражнений и выработать регулярность.</div>
+          </div>
+          <div class="result-block level-result" id="level-intermediate">
+            <div class="result-title">СРЕДНИЙ</div>
+            <div class="result-text">Самый интересный и самый сложный этап. Тело уже адаптировалось к базовым стимулам и требует системного подхода. Именно здесь большинство застревает на годы. Рабочий объём для тебя — 10–18 подходов на группу, волнообразная периодизация, правильные мезоциклы. Без системы прогресс практически останавливается.</div>
+          </div>
+          <div class="result-block level-result" id="level-advanced">
+            <div class="result-title">ПРОДВИНУТЫЙ</div>
+            <div class="result-text">Ты достиг точки где случайные тренировки не работают совсем. Нужна точная настройка объёма (16–22 подхода на группу), периодизация нагрузки, контроль маркеров восстановления. Каждый следующий процент прогресса требует значительно больше усилий и точности.</div>
+          </div>
+        </div>
+      </div>
+      
+      <p class="text-body mt-24 fade-in" style="font-size: 14px;">Это общий ориентир. Реальный расчёт учитывает ещё десяток параметров: сон, стресс, тип работы, наличие травм, цель и доступное оборудование.</p>
+    </div>
+  </section>
+
+  <!-- БЛОК 6: ГОДОВОЙ МАКРОЦИКЛ -->
+  <section>
+    <div class="container fade-in">
+      <h2 class="section-title">Как устроен год тренировок</h2>
+      <p class="section-subtitle">Профессиональный тренинг устроен как архитектурный проект: сначала фундамент, потом стены, потом отделка. Каждый этап готовит почву для следующего. Это называется периодизация.</p>
+      
+      <div class="year-timeline fade-in">
+        <div class="year-segment active" data-target="desc-adapt"></div>
+        <div class="year-segment" data-target="desc-growth"></div>
+        <div class="year-segment" data-target="desc-power"></div>
+        <div class="year-segment" data-target="desc-realize"></div>
+      </div>
+      <div class="year-labels fade-in">
+        <div>Адаптация<br>Нед 1–10</div>
+        <div>Основной рост<br>Нед 11–28</div>
+        <div>Сила<br>Нед 29–40</div>
+        <div>Реализация<br>Нед 41–52</div>
+      </div>
+
+      <div id="desc-adapt" class="timeline-desc active">Адаптация: Самый важный и самый недооценённый этап. Тело учится работать с нагрузкой: суставы, сухожилия, нервная система. Объём начинается с минимального эффективного и плавно нарастает. Те кто пропускает этот этап и сразу бомбит с максимальной нагрузки, потом удивляются болям и застою через 2 месяца.</div>
+      <div id="desc-growth" class="timeline-desc">Основной рост: Главный рабочий период. Объём нагрузки находится в зоне MAV для каждой мышечной группы. Диапазоны повторений меняются от тренировки к тренировке. Каждые 4–5 недель идёт делоад — неделя снижения нагрузки для суперкомпенсации.</div>
+      <div id="desc-power" class="timeline-desc">Сила: Накопленная масса конвертируется в силу. Работа с весами 80–95% от максимума, меньший объём, больший отдых. После этого блока возвращение к гипертрофийному тренингу даст значительно больший отклик.</div>
+      <div id="desc-realize" class="timeline-desc">Реализация: Закрепление результатов, переходный период, оценка прогресса за год. Конец года это начало нового цикла, и он всегда начинается на более высоком уровне.</div>
+    </div>
+  </section>
+
+  <!-- БЛОК 7: МЕЗОЦИКЛ -->
+  <section class="bg-section">
+    <div class="container fade-in">
+      <h2 class="section-title">Внутри каждого блока: мезоцикл</h2>
+      <p class="section-subtitle">Каждый большой блок состоит из мезоциклов. Мезоцикл это 4–5 недель тренировок с определённой логикой нагрузки. Не случайный набор недель, а управляемое нарастание стимула с обязательным восстановлением.</p>
+      
+      <div class="meso-chart fade-in">
+        <div class="meso-bar-container"><div class="meso-zone-top">MEV</div><div class="meso-bar" style="height: 40px;"></div><div class="meso-label-bot">Нед 1</div></div>
+        <div class="meso-bar-container"><div class="meso-zone-top">MAV↓</div><div class="meso-bar" style="height: 60px;"></div><div class="meso-label-bot">Нед 2</div></div>
+        <div class="meso-bar-container"><div class="meso-zone-top">MAV</div><div class="meso-bar" style="height: 80px;"></div><div class="meso-label-bot">Нед 3</div></div>
+        <div class="meso-bar-container"><div class="meso-zone-top">MRV</div><div class="meso-bar" style="height: 100px;"></div><div class="meso-label-bot">Нед 4</div></div>
+        <div class="meso-bar-container"><div class="meso-zone-top deload">ДЕЛОАД</div><div class="meso-bar deload" style="height: 30px;"></div><div class="meso-label-bot" style="color:var(--accent);">Нед 5</div></div>
+      </div>
+
+      <div style="overflow-x: auto;" class="fade-in">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Неделя</th>
+              <th>Тип</th>
+              <th>Подходы</th>
+              <th>Интенсивность</th>
+              <th>RIR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td><td>Вводная</td><td>MEV (6–8)</td><td>60–65%</td><td>3–4</td>
+            </tr>
+            <tr>
+              <td>2</td><td>Накопление</td><td>8–10</td><td>65–70%</td><td>2–3</td>
+            </tr>
+            <tr>
+              <td>3</td><td>Накопление</td><td>10–14</td><td>70–75%</td><td>2</td>
+            </tr>
+            <tr>
+              <td>4</td><td>Пик</td><td>14–20</td><td>75–85%</td><td>0–1</td>
+            </tr>
+            <tr class="row-deload">
+              <td>5</td><td>Делоад</td><td>MV (4–6)</td><td>50–60%</td><td>4–5</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-body mt-32 fade-in">Делоад это не потеря времени. Именно в период восстановления происходит суперкомпенсация — тело реализует весь накопленный за цикл прогресс.</p>
+    </div>
+  </section>
+
+  <!-- БЛОК 8: ИНТЕРАКТИВ 2 -->
+  <section>
+    <div class="container fade-in">
+      <h2 class="section-title">Посчитай свой недельный объём</h2>
+      <p class="section-subtitle">Введи данные и узнай сколько рабочих подходов нужно делать на каждую мышечную группу в неделю.</p>
+      
+      <div class="calc-card">
+        <div class="form-group">
+          <label class="form-label">Уровень подготовки</label>
+          <select class="calc-select" id="calc-level">
+            <option value="beginner">Новичок (0–1 год)</option>
+            <option value="intermediate">Средний (1–3 года)</option>
+            <option value="advanced">Продвинутый (3+ лет)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Часов сна в среднем</label>
+          <select class="calc-select" id="calc-sleep">
+            <option value="good">7–8 часов и больше</option>
+            <option value="6to7">6–7 часов</option>
+            <option value="under6">Менее 6 часов</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Уровень стресса</label>
+          <select class="calc-select" id="calc-stress">
+            <option value="low">Низкий (всё спокойно)</option>
+            <option value="medium">Средний (бывает напряжённо)</option>
+            <option value="high">Высокий (постоянный стресс)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="calc-work">
+            <div class="toggle-bg"><div class="toggle-knob"></div></div>
+            <span style="font-weight: 500;">Физически тяжёлая работа</span>
+          </label>
+        </div>
+
+        <div class="text-center mt-32">
+          <button class="btn-primary" onclick="calcVolume()">Рассчитать объём</button>
+        </div>
+
+        <div id="volume-result" style="display: none; margin-top: 32px;">
+          <div style="overflow-x: auto;">
+            <table class="styled-table">
+              <tbody id="volume-table">
+                <!-- JS insert -->
+              </tbody>
+            </table>
+          </div>
+          <div class="warning-box">
+            ⚠️ Это общий расчёт без учёта травм, особенностей восстановления и конкретной цели. Реальные цифры в персональной программе будут точнее.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 9: ЖЕНСКИЙ ТРЕНИНГ -->
+  <section class="bg-section">
+    <div class="container fade-in">
+      <h2 class="section-title">Для женщин: как цикл меняет всё</h2>
+      <p class="section-subtitle">Большинство программ созданы для мужчин и механически применяются к женщинам. Это ошибка, потому что женская физиология принципиально отличается по параметрам которые напрямую влияют на нагрузку и восстановление.</p>
+      
+      <div class="cycle-timeline fade-in">
+        <div class="cycle-phase">
+          <div class="cycle-phase-label">Фаза 1 — Фолликулярная</div>
+          <div class="cycle-phase-desc">Дни 1–13. Оптимальное время для максимальных нагрузок. Эстроген ускоряет восстановление, чувствительность к инсулину высокая. Именно сюда ставится пиковая неделя мезоцикла.</div>
+        </div>
+        <div class="cycle-phase">
+          <div class="cycle-phase-label">Фаза 2 — Овуляция</div>
+          <div class="cycle-phase-desc">День 14 ±2. Пик эластичности связок. Риск травм коленей выше. Обязательная нейромышечная разминка 10–15 минут, контроль техники в приседаниях.</div>
+        </div>
+        <div class="cycle-phase">
+          <div class="cycle-phase-label">Фаза 3 — Лютеиновая</div>
+          <div class="cycle-phase-desc">Дни 15–28. Базальная температура выше, восстановление медленнее. Объём снижается на 10–15% при сохранении интенсивности. Углеводы перед тренировкой обязательны.</div>
+        </div>
+        <div class="cycle-phase">
+          <div class="cycle-phase-label">Фаза 4 — Пре-менструальная</div>
+          <div class="cycle-phase-desc">Дни 25–28. Качество сна хуже, ВСР снижена. Идеальное время для делоада. Если делоад совпадает с этой фазой — двойная польза.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 10: ИНТЕРАКТИВ 3 -->
+  <section>
+    <div class="container fade-in">
+      <h2 class="section-title">Что конкретно мешает твоему прогрессу?</h2>
+      <p class="section-subtitle">5 вопросов — и ты поймёшь где главная точка роста.</p>
+      
+      <div class="calc-card">
+        <div class="radio-group">
+          <div class="radio-question">Как давно росли рабочие веса?</div>
+          <div class="radio-option diag-option" data-group="d1" data-type="none">Растут каждые 1–2 недели</div>
+          <div class="radio-option diag-option" data-group="d1" data-type="volume">Росли 1–3 месяца назад</div>
+          <div class="radio-option diag-option" data-group="d1" data-type="structure">Не помню когда</div>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-question">Как чувствуешь себя после тренировки?</div>
+          <div class="radio-option diag-option" data-group="d2" data-type="none">Нормальная усталость</div>
+          <div class="radio-option diag-option" data-group="d2" data-type="recovery">Очень тяжело, долго восстанавливаюсь</div>
+          <div class="radio-option diag-option" data-group="d2" data-type="volume">Почти не чувствую тренировки</div>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-question">Как спишь?</div>
+          <div class="radio-option diag-option" data-group="d3" data-type="none">7–8 часов, качественно</div>
+          <div class="radio-option diag-option" data-group="d3" data-type="recovery">6–7 часов</div>
+          <div class="radio-option diag-option" data-group="d3" data-type="recovery">Меньше 6 или плохо</div>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-question">Есть план на следующие 3 месяца?</div>
+          <div class="radio-option diag-option" data-group="d4" data-type="none">Да, чёткий план</div>
+          <div class="radio-option diag-option" data-group="d4" data-type="structure">Примерно понимаю</div>
+          <div class="radio-option diag-option" data-group="d4" data-type="structure">Нет, по ситуации</div>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-question">Что происходит с телом последние 2 месяца?</div>
+          <div class="radio-option diag-option" data-group="d5" data-type="none">Есть прогресс</div>
+          <div class="radio-option diag-option" data-group="d5" data-type="volume">Стагнация</div>
+          <div class="radio-option diag-option" data-group="d5" data-type="recovery">Ухудшение</div>
+        </div>
+
+        <div class="text-center mt-32">
+          <button class="btn-primary" onclick="diagnose()">Показать проблему</button>
+        </div>
+
+        <div id="diag-results">
+          <div class="result-block diag-result" id="diag-volume">
+            <div class="result-title">ПРОБЛЕМА С ОБЪЁМОМ</div>
+            <div class="result-text">Скорее всего ты или перегружаешь тело (работаешь выше своего MRV) или недогружаешь (остаёшься в зоне MEV без роста). Решение: правильный расчёт объёма под твои данные и периодизация нагрузки внутри мезоцикла.</div>
+          </div>
+          <div class="result-block diag-result" id="diag-recovery">
+            <div class="result-title">ПРОБЛЕМА С ВОССТАНОВЛЕНИЕМ</div>
+            <div class="result-text">Тренировочный стимул есть, но тело не успевает адаптироваться из-за недосыпа, стресса или слишком частых тренировок. Рост происходит не во время тренировки, а после неё.</div>
+          </div>
+          <div class="result-block diag-result" id="diag-structure">
+            <div class="result-title">ПРОБЛЕМА СО СТРУКТУРОЙ</div>
+            <div class="result-text">Отсутствует системный план. Тренировки есть, усердие есть, а программы как таковой нет. Именно это чаще всего стоит за долгосрочной стагнацией.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 11: ПОЧЕМУ САМОМУ СЛОЖНО -->
+  <section class="bg-section">
+    <div class="container fade-in">
+      <h2 class="section-title">Почему это трудно сделать самому</h2>
+      <p class="section-subtitle">Всё что написано выше это общие принципы. Реальная программа это 20+ переменных которые нужно учесть одновременно и которые постоянно меняются.</p>
+      
+      <div class="small-cards-grid fade-in">
+        <div class="small-card">Твой точный MRV для каждой мышцы</div>
+        <div class="small-card">Тип периодизации под твою цель</div>
+        <div class="small-card">Дробный объём синергистов</div>
+        <div class="small-card">Коррекция нагрузки под сон и стресс</div>
+        <div class="small-card">Точки прогрессии и признаки застоя</div>
+        <div class="small-card">Адаптация программы под травмы</div>
+      </div>
+
+      <p class="text-body fade-in">Каждый из этих параметров влияет на программу. И каждый меняется каждые несколько недель. Профессиональный тренер не просто составляет программу один раз. Он отслеживает маркеры, корректирует нагрузку и двигает тебя по плану который действительно соответствует твоему состоянию прямо сейчас.</p>
+    </div>
+  </section>
+
+  <!-- БЛОК 12: АВТОР -->
+  <section>
+    <div class="container fade-in">
+      <h2 class="section-title">Кто это написал</h2>
+      
+      <div class="author-card mt-32">
+        <div class="author-avatar">ДМ</div>
+        <div class="author-info">
+          <div class="author-name">Дмитрий Мухин</div>
+          <div class="author-role">Фитнес-тренер · 8 лет опыта</div>
+          <p>Работаю с занятыми людьми которые хотят получить результат а не просто ходить в зал. Строю программы на основе актуальных исследований по физиологии и периодизации нагрузок.</p>
+          <p>Мой подход: объясняю почему, а не просто говорю что. За каждым решением в программе стоит конкретная физиологическая причина.</p>
+          <a href="https://t.me/BodyBal" target="_blank" class="author-link">→ Telegram канал</a>
+        </div>
+      </div>
+
+      <div class="author-stats fade-in">
+        <div class="stat-item">
+          <div class="stat-num">8 лет</div>
+          <div class="stat-label">опыта</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100+</div>
+          <div class="stat-label">клиентов</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">шаблонных программ</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 13: ФИНАЛЬНЫЙ CTA -->
+  <section id="offer" class="cta-final fade-in">
+    <div class="container">
+      <div class="cta-label">ГОТОВ РАБОТАТЬ СИСТЕМНО?</div>
+      <h2>Хочешь такую же систему<br>под свои данные?</h2>
+      <p class="cta-subtext" style="font-size: 16px;">Я строю программы индивидуально. Не шаблон с твоим именем, а реальный план с учётом твоего уровня, цели, расписания, травм и данных восстановления. С еженедельными корректировками по результатам.</p>
+      
+      <div class="cta-buttons">
+        <a href="https://t.me/dgmukhin_adm" class="btn-primary" target="_blank">Написать Дмитрию →</a>
+        <a href="#offer" class="btn-outline">Узнать об условиях</a>
+      </div>
+
+      <p class="cta-subtext" style="margin-top: 32px;">Или начни с бесплатного шага: заполни короткую анкету и получи программу на первую неделю автоматически в Telegram.</p>
+      <a href="https://t.me/dgmukhin_adm?start=quiz" class="cta-link" target="_blank">→ Получить пробную программу бесплатно</a>
+    </div>
+  </section>
+
+  <!-- ФУТЕР -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">© Дмитрий Мухин · Тренер</div>
+      <div class="footer-links">
+        <a href="https://t.me/BodyBal" target="_blank">Telegram канал</a>
+        <a href="https://t.me/dgmukhin_adm" target="_blank">Написать</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for Animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Sticky Navbar
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
+    });
+
+    // Accordion
+    function toggleGoal(card) {
+      const isActive = card.classList.contains('active');
+      document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('active'));
+      if (!isActive) card.classList.add('active');
+    }
+
+    // Radio group selection
+    document.querySelectorAll('.radio-option').forEach(opt => {
+      opt.addEventListener('click', function() {
+        const groupName = this.dataset.group;
+        document.querySelectorAll(`.radio-option[data-group="${groupName}"]`).forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    // Level Calculator
+    function calcLevel() {
+      const groups = ['l1', 'l2', 'l3', 'l4'];
+      let total = 0;
+      let answered = 0;
+      for (let g of groups) {
+        const selected = document.querySelector(`.radio-option[data-group="${g}"].selected`);
+        if (selected) {
+          total += parseInt(selected.dataset.points || 0);
+          answered++;
+        }
+      }
+      
+      if (answered < 4) {
+        alert('Пожалуйста, ответьте на все 4 вопроса.');
+        return;
+      }
+      
+      document.querySelectorAll('.level-result').forEach(r => r.style.display = 'none');
+      if (total <= 4) document.getElementById('level-beginner').style.display = 'block';
+      else if (total <= 8) document.getElementById('level-intermediate').style.display = 'block';
+      else document.getElementById('level-advanced').style.display = 'block';
+      
+      setTimeout(() => {
+        document.getElementById('level-results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    }
+
+    // Year Timeline
+    document.querySelectorAll('.year-segment').forEach(seg => {
+      seg.addEventListener('click', function() {
+        document.querySelectorAll('.year-segment').forEach(s => s.classList.remove('active'));
+        this.classList.add('active');
+        
+        document.querySelectorAll('.timeline-desc').forEach(d => d.classList.remove('active'));
+        document.getElementById(this.dataset.target).classList.add('active');
+      });
+    });
+
+    // Volume Calculator
+    const baseMAV = {
+      beginner: { chest: 12, back: 12, quads: 10, hams: 8, glutes: 10, delts: 10, biceps: 10, triceps: 10 },
+      intermediate: { chest: 15, back: 16, quads: 14, hams: 12, glutes: 12, delts: 15, biceps: 12, triceps: 12 },
+      advanced: { chest: 18, back: 20, quads: 16, hams: 14, glutes: 15, delts: 18, biceps: 14, triceps: 14 }
+    };
+    const baseMEV = {
+      beginner: { chest: 6, back: 8, quads: 6, hams: 4, glutes: 4, delts: 6, biceps: 4, triceps: 4 },
+      intermediate: { chest: 8, back: 10, quads: 8, hams: 6, glutes: 5, delts: 8, biceps: 6, triceps: 6 },
+      advanced: { chest: 10, back: 12, quads: 10, hams: 8, glutes: 8, delts: 10, biceps: 8, triceps: 8 }
+    };
+
+    function calcVolume() {
+      const level = document.getElementById('calc-level').value;
+      const sleep = document.getElementById('calc-sleep').value;
+      const stress = document.getElementById('calc-stress').value;
+      const heavyWork = document.getElementById('calc-work').checked;
+
+      let coeff = 1.0;
+      if (sleep === 'under6') coeff *= 0.85;
+      else if (sleep === '6to7') coeff *= 0.90;
+      if (stress === 'high') coeff *= 0.90;
+      if (heavyWork) coeff *= 0.85;
+
+      const muscles = ['chest', 'back', 'quads', 'hams', 'glutes', 'delts', 'biceps', 'triceps'];
+      const names = { chest: 'Грудные', back: 'Спина', quads: 'Квадрицепсы', hams: 'Бицепс бедра', glutes: 'Ягодичные', delts: 'Дельты', biceps: 'Бицепс', triceps: 'Трицепс' };
+
+      let tableHTML = '<tr><th>Мышца</th><th>MEV (старт)</th><th>Твой MAV</th><th>Не более</th></tr>';
+      muscles.forEach(m => {
+        const mev = baseMEV[level][m];
+        const mav = Math.round(baseMAV[level][m] * coeff);
+        const mrv = Math.round(mav * 1.25);
+        tableHTML += `<tr><td>${names[m]}</td><td>${mev}</td><td style="color: var(--accent); font-weight: 600;">${mav}</td><td>${mrv}</td></tr>`;
+      });
+
+      document.getElementById('volume-table').innerHTML = tableHTML;
+      document.getElementById('volume-result').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('volume-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    }
+
+    // Diagnosis
+    function diagnose() {
+      const groups = ['d1', 'd2', 'd3', 'd4', 'd5'];
+      const counts = { volume: 0, recovery: 0, structure: 0, none: 0 };
+      
+      let answered = 0;
+      for (let g of groups) {
+        const selected = document.querySelector(`.radio-option[data-group="${g}"].selected`);
+        if (selected) {
+          const type = selected.dataset.type;
+          if (counts[type] !== undefined) counts[type]++;
+          answered++;
+        }
+      }
+      
+      if (answered < 5) {
+        alert('Пожалуйста, ответьте на все 5 вопросов.');
+        return;
+      }
+      
+      let maxType = 'volume';
+      let maxCount = -1;
+      for (let t of ['volume', 'recovery', 'structure']) {
+        if (counts[t] > maxCount) {
+          maxCount = counts[t];
+          maxType = t;
+        }
+      }
+      
+      document.querySelectorAll('.diag-result').forEach(r => r.style.display = 'none');
+      document.getElementById('diag-' + maxType).style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('diag-results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    }
+  </script>
+</body>
+</html>
